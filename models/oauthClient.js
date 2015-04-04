@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var modelName = 'OauthClient';
+var modelName = 'OAuthClient';
 
 var oauthClientSchema = new mongoose.Schema({
     name: String,

@@ -1,29 +1,31 @@
+var Q = require('q');
+var _ = require('lodash');
 var crypto = require('crypto');
 var errorHelper = rootRequire('./helpers/error');
 var winston = require('winston');
-var Q = require('q');
 
 var passwordHelper = rootRequire('./helpers/password');
 var models = require('./models');
 var User = models.user;
 var Authentication = models.authentications;
-var OauthSession = models.oauth_sessions;
+var OauthSession = models.oauthSession;
 
 //API
 module.exports = {
+    addUser: addUser,
+    checkAccessTokenScope: checkAccessTokenScope,
+    createAccessToken: createAccessToken,
     createCode: createCode,
     createForceLogin: createForceLogin,
+    createOAuthAuthentication: createOAuthAuthentication,
     getAuthorization: getAuthorization,
     getForceLogin: getForceLogin,
-    checkAccessTokenScope: checkAccessTokenScope,
-    addUser: addUser,
-    getUser: getUser,
-    updateUser: updateUser,
-    updateUserResetHash: updateUserResetHash,
     getOAuthAuthentication: getOAuthAuthentication,
-    createOAuthAuthentication: createOAuthAuthentication,
+    getUser: getUser,
     updateAccessToken: updateAccessToken,
-    updateUserPasswordForgot: updateUserPasswordForgot
+    updateUser: updateUser,
+    updateUserPasswordForgot: updateUserPasswordForgot,
+    updateUserResetHash: updateUserResetHash
 };
 
 function updateUserPasswordForgot(userId, hash, newPassword) {
@@ -250,6 +252,22 @@ function createCode(data) {
             });
 
             throw err;
+        });
+}
+
+function createAccessToken(data){
+    return Q.nfcall(crypto.randomBytes, 48)
+        .then(function(buf) {
+            if (!buf) {
+                throw new Error('Error generating access_token');
+            }
+            return buf.toString('hex');
+        })
+        .then(function(accessToken){
+
+            return OauthSession.create(_.assign(data, {
+                access_token: accessToken
+            }));
         });
 }
 

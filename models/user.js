@@ -31,6 +31,7 @@ var userSchema = new mongoose.Schema({
     lastLogin: Date,
     updatedAt: Date,
     activated: Boolean,
+    isAuthmakerAdmin: Boolean,
 
     // 'Snapshot-able' data that can change regularly, is updated to
     // reflect latest state when chats are started

@@ -73,7 +73,7 @@ var userSchema = new mongoose.Schema({
         subject: String,
         message: String,
         reference: String
-    }],
+    }]
 
 }, {
     collection: 'users'

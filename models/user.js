@@ -67,24 +67,13 @@ var userSchema = new mongoose.Schema({
         }
     },
 
-    /**
-     * Moving to account
-     */
-    plans: [{
-        plan: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'StripePlan'
-        },
-        name: String,
-        expiryDate: Date
+    sentEmails: [{
+        timestamp: Date,
+        to: String,
+        subject: String,
+        message: String,
+        reference: String
     }],
-    stripeId: String,
-    clientIdAdmin: String, //The clientId that this user is allowed to admin
-
-    /**
-     * depricated in favour of account _id
-     */
-    verificationCode: String
 
 }, {
     collection: 'users'

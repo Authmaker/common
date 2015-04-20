@@ -73,7 +73,9 @@ var userSchema = new mongoose.Schema({
         subject: String,
         message: String,
         reference: String
-    }]
+    }],
+
+    externalIdentities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ExternalIdentity' }]
 
 }, {
     collection: 'users'

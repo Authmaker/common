@@ -255,7 +255,7 @@ function createCode(data) {
         });
 }
 
-function createAccessToken(data){
+function createAccessToken(data) {
     return Q.nfcall(crypto.randomBytes, 48)
         .then(function(buf) {
             if (!buf) {
@@ -263,7 +263,7 @@ function createAccessToken(data){
             }
             return buf.toString('hex');
         })
-        .then(function(accessToken){
+        .then(function(accessToken) {
 
             return OauthSession.create(_.assign(data, {
                 access_token: accessToken

@@ -28,9 +28,9 @@ module.exports = {
     updateUserResetHash: updateUserResetHash
 };
 
-function updateUserPasswordForgot(userId, hash, newPassword) {
+function updateUserPasswordForgot(email, hash, newPassword) {
     return User.findOneAndUpdate({
-            _id: userId,
+            email: email,
             passwordResetHash: hash
         }, {
             passwordResetHash: '',
@@ -46,7 +46,7 @@ function updateUserPasswordForgot(userId, hash, newPassword) {
             winston.error('', {
                 error: err.message,
                 stack: err.stack,
-                userId: userId
+                email: email
             });
 
             throw err;

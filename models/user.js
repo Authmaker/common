@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var url = require('url');
-var _ = require('underscore')._;
+
 
 var modelName = 'User';
 

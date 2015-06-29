@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 var winston = require('winston');
-var _ = require('underscore')._;
+var _ = require('lodash');
 
 var modelName = 'Account';
 
@@ -10,7 +10,7 @@ var accountSchema = new mongoose.Schema({
     name: String,
     plan: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'StripePlan'
+        ref: 'Plan'
     },
     planExpiryDate: Date,
     users: [{

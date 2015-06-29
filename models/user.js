@@ -1,6 +1,7 @@
+var Q = require('q');
+var _ = require('lodash');
 var mongoose = require('mongoose');
 var url = require('url');
-
 
 var modelName = 'User';
 
@@ -115,8 +116,36 @@ userSchema.statics.findFirstRegisteredUserForConfig = function(configId) {
         });
 };
 
+userSchema.methods.getAccounts = function() {
+    //return a (promise for) list of accounts that this user is a part of
+    return this.model('Account').find({
+        users: this._id
+    }).populate('plan').exec().then(function(accounts){
+        var promises = accounts.map(function(account){
+            return account.plan.populate('scopes').execPopulate().then(function(){
+                return account;
+            });
+        });
 
+        return Q.all(promises);
+    });
+};
 
+userSchema.methods.getActiveScopes = function() {
+    return this.getAccounts().then(function(accounts) {
+        return _(accounts)
+            .chain()
+            .filter(function(plan) {
+                return plan.planExpiryDate > new Date();
+            })
+            .pluck('plan')
+            .pluck('scopes')
+            .flatten()
+            .pluck('scope')
+            .uniq()
+            .value();
+    });
+};
 
 userSchema.virtual('cleanUrl').get(function() {
     return clean_url(this.websiteUrl);

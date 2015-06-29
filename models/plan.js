@@ -5,13 +5,12 @@ var modelName = 'Plan';
 var planSchema = new mongoose.Schema({
     name: String,
     stripePlan: String,
-    scopes: [String],
-    newSubscriptions: Boolean,
-    lowValue: Boolean,
-    scopeDocuments: [{
+    scopes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Scope'
-    }]
+    }],
+    newSubscriptions: Boolean,
+    lowValue: Boolean
 });
 
 //protect against re-defining

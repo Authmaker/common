@@ -1,0 +1,24 @@
+{
+  "name": "authmaker-common",
+  "version": "1.0.0",
+  "description": "Common aspects for all authmaker repos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Authmaker/authmaker-common.git"
+  },
+  "author": "Chris Manson <chris@manson.ie>",
+  "license": "Private",
+  "bugs": {
+    "url": "https://github.com/Authmaker/authmaker-common/issues"
+  },
+  "homepage": "https://github.com/Authmaker/authmaker-common#readme",
+  "dependencies": {
+    "mongoose": "^4.0.6",
+    "q": "^1.4.1",
+    "util": "^0.10.3"
+  }
+}

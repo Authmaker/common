@@ -7,3 +7,7 @@ module.exports = {
     init: require('./lib/init'),
     models: require('./models')
 };
+
+if(process.env.NODE_ENV === "test"){
+    module.exports.mongoose = mongoose;
+}

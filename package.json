@@ -1,6 +1,6 @@
 {
   "name": "authmaker-common",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Common aspects for all authmaker repos",
   "main": "index.js",
   "scripts": {

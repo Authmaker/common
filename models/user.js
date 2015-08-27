@@ -18,6 +18,7 @@ var userSchema = new mongoose.Schema({
     displayName: String, //not unique - optional => composed when not supplied (was username in mysql)
     email: String,
     password: String,
+    termsAccepted: Boolean,
 
     //Install details - temporary during first install for an account
     websiteUrl: String,
@@ -75,10 +76,23 @@ var userSchema = new mongoose.Schema({
         reference: String
     }],
 
+    metaData: mongoose.Schema.Types.Mixed,
+
     externalIdentities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ExternalIdentity' }]
 
 }, {
     collection: 'users'
+});
+
+userSchema.index({
+    username: 1
+});
+
+userSchema.index({
+    username: 1,
+    clientId: 1
+}, {
+    unique: true
 });
 
 userSchema.methods.getAccounts = function() {
@@ -111,17 +125,6 @@ userSchema.methods.getActiveScopes = function() {
             .value();
     });
 };
-
-userSchema.index({
-    username: 1
-});
-
-userSchema.index({
-    username: 1,
-    clientId: 1
-}, {
-    unique: true
-});
 
 //protect against re-defining
 if (mongoose.modelNames().indexOf(modelName) !== -1) {

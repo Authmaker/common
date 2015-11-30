@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
 var _ = require('lodash');
+var mongoose = require('mongoose');
 var Q = require('q');
 
 var modelName = 'User';
@@ -101,12 +101,16 @@ userSchema.methods.getAccounts = function() {
         users: this._id
     }).populate('plan').exec().then(function(accounts){
         var promises = accounts.map(function(account){
+            if(!account.plan) return Q(account);
+
             return account.plan.populate('scopes').execPopulate().then(function(){
                 return account;
             });
         });
 
-        return Q.all(promises);
+        return Q.all(promises).then(function(accounts){
+            return _.compact(accounts);
+        });
     });
 };
 

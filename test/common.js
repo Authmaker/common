@@ -1,3 +1,7 @@
+var Q = require('q');
+
+Q.longStackSupport = true;
+
 global.rootPath = function(fileName) {
     return __dirname + '/../' + fileName;
 };

@@ -13,5 +13,5 @@ nconf.defaults({
 
 before(function() {
     //create http server
-    rootRequire('./lib/init')(nconf);
+    rootRequire('./').init(nconf);
 });

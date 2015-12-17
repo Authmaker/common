@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var Q = require('q');
 
 var models = {};
 
@@ -15,4 +16,17 @@ fs.readdirSync(__dirname).forEach(function(fileName) {
     }
 });
 
+function getModel(modelName) {
+    return Q.fcall(function(){
+        var required = require('./' + modelName);
+
+        if(!required){
+            throw new Error("Model " + modelName + " does not exist");
+        }
+
+        return required.getModel();
+    });
+}
+
 module.exports = models;
+module.exports.getModel = getModel;

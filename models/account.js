@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 var modelName = 'Account';
 
-var accountSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
     stripeId: String,
     name: String,
     plan: {
@@ -25,7 +25,7 @@ var accountSchema = new mongoose.Schema({
     collection: 'accounts'
 });
 
-accountSchema.methods.getPlans = function() {
+schema.methods.getPlans = function() {
 
     return Q.ninvoke(this, 'populate', 'plans').then(function(account) {
         var promises = account.plans.map(function(plan) {
@@ -38,7 +38,7 @@ accountSchema.methods.getPlans = function() {
     });
 };
 
-accountSchema.methods.setPlanExpiryDate = function(planName, expiryDate) {
+schema.methods.setPlanExpiryDate = function(planName, expiryDate) {
 
     winston.info("Updating account plan", {
         planName: planName,
@@ -120,9 +120,13 @@ accountSchema.methods.setPlanExpiryDate = function(planName, expiryDate) {
         });
 };
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, accountSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

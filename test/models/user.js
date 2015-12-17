@@ -13,7 +13,9 @@ describe("user model test", function() {
     });
 
     it("should return no accounts for user with no account", function() {
-        return fixture.models.user.findOne({_id: fixture.data.usersToCreate[0]._id}).exec().then(function(user){
+        return fixture.getModel('user').then(function(user){
+            return user.findOne({_id: fixture.data.usersToCreate[0]._id}).exec();
+        }).then(function(user){
             return user.getAccounts();
         }).then(function(accounts){
             expect(accounts).to.have.length(0);
@@ -21,7 +23,9 @@ describe("user model test", function() {
     });
 
     it("should return 1 accounts for user with an account", function() {
-        return fixture.models.user.findOne({_id: fixture.data.usersToCreate[1]._id}).exec().then(function(user){
+        return fixture.getModel('user').then(function(user){
+            return user.findOne({_id: fixture.data.usersToCreate[1]._id}).exec();
+        }).then(function(user){
             return user.getAccounts();
         }).then(function(accounts){
             expect(accounts).to.have.length(1);
@@ -29,7 +33,9 @@ describe("user model test", function() {
     });
 
     it("should return 1 accounts for user with an account who is the admin", function() {
-        return fixture.models.user.findOne({_id: fixture.data.usersToCreate[2]._id}).exec().then(function(user){
+        return fixture.getModel('user').then(function(user){
+            return user.findOne({_id: fixture.data.usersToCreate[2]._id}).exec();
+        }).then(function(user){
             return user.getAccounts();
         }).then(function(accounts){
             expect(accounts).to.have.length(1);
@@ -37,7 +43,9 @@ describe("user model test", function() {
     });
 
     it("should return 1 accounts for user with an account who is the admin and that account should have a plan", function() {
-        return fixture.models.user.findOne({_id: fixture.data.usersToCreate[3]._id}).exec().then(function(user){
+        return fixture.getModel('user').then(function(user){
+            return user.findOne({_id: fixture.data.usersToCreate[3]._id}).exec();
+        }).then(function(user){
             return user.getAccounts();
         }).then(function(accounts){
             expect(accounts).to.have.length(1);

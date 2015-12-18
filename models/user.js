@@ -1,10 +1,10 @@
-var mongoose = require('mongoose');
 var _ = require('lodash');
+var mongoose = require('mongoose');
 var Q = require('q');
 
 var modelName = 'User';
 
-var userSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
 
     /**
      * Unique key
@@ -84,33 +84,37 @@ var userSchema = new mongoose.Schema({
     collection: 'users'
 });
 
-userSchema.index({
+schema.index({
     username: 1
 });
 
-userSchema.index({
+schema.index({
     username: 1,
     clientId: 1
 }, {
     unique: true
 });
 
-userSchema.methods.getAccounts = function() {
+schema.methods.getAccounts = function() {
     //return a (promise for) list of accounts that this user is a part of
     return this.model('Account').find({
         users: this._id
     }).populate('plan').exec().then(function(accounts){
         var promises = accounts.map(function(account){
+            if(!account.plan) return Q(account);
+
             return account.plan.populate('scopes').execPopulate().then(function(){
                 return account;
             });
         });
 
-        return Q.all(promises);
+        return Q.all(promises).then(function(accounts){
+            return _.compact(accounts);
+        });
     });
 };
 
-userSchema.methods.getActiveScopes = function() {
+schema.methods.getActiveScopes = function() {
     return this.getAccounts().then(function(accounts) {
         return _(accounts)
             .chain()
@@ -126,9 +130,13 @@ userSchema.methods.getActiveScopes = function() {
     });
 };
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, userSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

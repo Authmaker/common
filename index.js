@@ -4,8 +4,8 @@ var util = require('util');
 var Q = require('q');
 
 module.exports = {
-    init: require('./lib/init'),
-    models: require('./models')
+    init: require('./lib/mongo').init,
+    getModel: require('./models').getModel
 };
 
 if(process.env.NODE_ENV === "test"){

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var modelName = 'Scope';
 
-var scopeSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
     name: String,
     scope: String,
     paidFor: Boolean,
@@ -10,9 +10,13 @@ var scopeSchema = new mongoose.Schema({
     plan: String
 });
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, scopeSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

@@ -4,7 +4,8 @@
   "description": "Common aspects for all authmaker repos",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha --recursive --reporter spec",
+    "test-watch": "npm run test -- -w --reporter min"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,14 @@
     "q": "^1.4.1",
     "util": "^0.10.3",
     "winston": "^1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "commander": "^2.9.0",
+    "mocha": "^2.2.5",
+    "nconf": "^0.8.2",
+    "q": "^1.4.1",
+    "sinon": "^1.15.4",
+    "supertest": "^1.0.1"
   }
 }

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var modelName = 'ExternalIdentity';
 
-var externalIdentitySchema = mongoose.Schema({
+var schema = mongoose.Schema({
     externalId: String,
     username: String,
     displayName: String,
@@ -11,9 +11,13 @@ var externalIdentitySchema = mongoose.Schema({
     authTokens: mongoose.Schema.Types.Mixed
 });
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, externalIdentitySchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

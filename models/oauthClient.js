@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var modelName = 'OAuthClient';
 
-var oauthClientSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
     name: String,
     client_id: String,
     client_secret: String,
@@ -15,9 +15,13 @@ var oauthClientSchema = new mongoose.Schema({
     collection: 'oauthClients'
 });
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, oauthClientSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var modelName = 'Plan';
 
-var planSchema = new mongoose.Schema({
+var schema = new mongoose.Schema({
     name: String,
     stripePlan: String,
     scopes: [{
@@ -14,8 +14,13 @@ var planSchema = new mongoose.Schema({
 });
 
 //protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, planSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

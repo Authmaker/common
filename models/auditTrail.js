@@ -2,16 +2,20 @@ var mongoose = require('mongoose');
 
 var modelName = 'AuditTrail';
 
-var auditTrailSchema = mongoose.Schema({
+var schema = mongoose.Schema({
     access_token: String,
     tag: String,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     date: Date
 });
 
-//protect against re-defining
-if (mongoose.modelNames().indexOf(modelName) !== -1) {
-    module.exports.modelObject = mongoose.model(modelName);
-} else {
-    module.exports.modelObject = mongoose.model(modelName, auditTrailSchema);
-}
+module.exports.getModel = function(){
+    return require(__dirname + '/../lib/mongo').getConnection().then(function(connection){
+        //protect against re-defining
+        if (connection.modelNames().indexOf(modelName) !== -1) {
+            return connection.model(modelName);
+        } else {
+            return connection.model(modelName, schema);
+        }
+    });
+};

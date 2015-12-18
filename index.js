@@ -5,9 +5,6 @@ var Q = require('q');
 
 module.exports = {
     init: require('./lib/mongo').init,
-    getModel: require('./models').getModel
+    getModel: require('./models').getModel,
+    getConnection: require('./lib/mongo').getConnection,
 };
-
-if(process.env.NODE_ENV === "test"){
-    module.exports.mongoose = mongoose;
-}
